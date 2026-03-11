@@ -8,6 +8,12 @@
 {{- if .host }}
 - name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_HOST" "datasource" .datasource) }}
   value: {{ .host | quote }}
+{{- else if .hostFromSecret }}
+- name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_HOST" "datasource" .datasource) }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .hostFromSecret.name | required "database.hostFromSecret.name is required" }}
+      key: {{ .hostFromSecret.key | required "database.hostFromSecret.key is required" }}
 {{- end }}
 {{- if .port }}
 - name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_PORT" "datasource" .datasource) }}
@@ -24,6 +30,12 @@
 {{- if .user }}
 - name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_USER" "datasource" .datasource) }}
   value: {{ .user | quote }}
+{{- else if .userFromSecret }}
+- name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_USER" "datasource" .datasource) }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .userFromSecret.name | required "database.userFromSecret.name is required" }}
+      key: {{ .userFromSecret.key | required "database.userFromSecret.key is required" }}
 {{- end }}
 {{- if .pass }}
 - name: {{ include "cube.env.decorated" (dict "key" "CUBEJS_DB_PASS" "datasource" .datasource) }}
